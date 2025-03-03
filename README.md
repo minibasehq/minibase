@@ -3,9 +3,9 @@
 Minibase is a lightweight backend infrastructure.
 
 <img
-    alt="Minibase design"
-    style="margin: 0 auto;"
-    src="https://github.com/myapp/minibase/blob/main/design.png?raw=true"
+  alt="Minibase design"
+  style="margin: 0 auto;"
+  src="https://github.com/myapp/minibase/blob/main/design.png?raw=true"
 />
 
 ## Postgres
@@ -13,7 +13,15 @@ Minibase is a lightweight backend infrastructure.
 Start Postgres:
 
 ```sh
-docker run --detach --restart=unless-stopped --name myapp-postgres --network myapp --volume ./data:/var/lib/postgresql/data:Z -e POSTGRES_PASSWORD="postgres" -e POSTGRES_DB="app" ghcr.io/myapp/postgres
+docker run
+  --env POSTGRES_PASSWORD="postgres"
+  --env POSTGRES_DB="app"
+  --detach
+  --restart=unless-stopped
+  --name myapp-postgres
+  --network myapp
+  --volume ./data:/var/lib/postgresql/data:Z
+  ghcr.io/myapp/postgres
 ```
 
 ## GoTrue
@@ -29,7 +37,15 @@ TODO
 Start PostgREST:
 
 ```sh
-docker run --detach --restart=unless-stopped --name myapp-postgrest --network myapp -e PGRST_DB_URI="postgres://authenticator:mysecretpassword@myapp-postgres:5432/app" -e PGRST_JWT_SECRET=$JWT_SECRET -e PGRST_APP_SETTINGS_JWT_SECRET=$JWT_SECRET ghcr.io/myapp/postgrest
+docker run
+  --env PGRST_DB_URI="postgres://authenticator:mysecretpassword@myapp-postgres:5432/app"
+  --env PGRST_JWT_SECRET=$JWT_SECRET
+  --env PGRST_APP_SETTINGS_JWT_SECRET=$JWT_SECRET
+  --detach
+  --restart=unless-stopped
+  --name myapp-postgrest
+  --network myapp
+  ghcr.io/myapp/postgrest
 ```
 
 ## OpenResty
@@ -40,5 +56,12 @@ are specific to this application. The ports should remain unchanged.
 Start OpenResty:
 
 ```sh
-docker run --detach --restart=unless-stopped --name myapp-openresty --network myapp --publish 8000:80 --volume ${PWD}/conf.d-dev:/etc/nginx/conf.d ghcr.io/myapp/myapp-openresty
+docker run
+  --detach
+  --restart=unless-stopped
+  --name myapp-openresty
+  --network myapp
+  --volume ${PWD}/conf.d-dev:/etc/nginx/conf.d
+  --publish 8000:80
+  ghcr.io/myapp/myapp-openresty
 ```
