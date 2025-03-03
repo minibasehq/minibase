@@ -5,7 +5,7 @@ Minibase is a lightweight backend infrastructure.
 <img
   alt="Minibase design"
   style="margin: 0 auto;"
-  src="https://github.com/myapp/minibase/blob/main/design.png?raw=true"
+  src="https://github.com/explodinglabs/minibase/blob/main/design.png?raw=true"
 />
 
 ## Postgres
