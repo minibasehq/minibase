@@ -13,14 +13,14 @@ Minibase is a lightweight backend infrastructure.
 Start Postgres:
 
 ```sh
-docker run
-  --env POSTGRES_PASSWORD="postgres"
-  --env POSTGRES_DB="app"
-  --detach
-  --restart=unless-stopped
-  --name myapp-postgres
-  --network myapp
-  --volume ./data:/var/lib/postgresql/data:Z
+docker run \
+  --env POSTGRES_PASSWORD="postgres" \
+  --env POSTGRES_DB="app" \
+  --detach \
+  --restart=unless-stopped \
+  --name myapp-postgres \
+  --network myapp \
+  --volume ./data:/var/lib/postgresql/data:Z \
   ghcr.io/myapp/postgres
 ```
 
@@ -37,14 +37,14 @@ TODO
 Start PostgREST:
 
 ```sh
-docker run
-  --env PGRST_DB_URI="postgres://authenticator:mysecretpassword@myapp-postgres:5432/app"
-  --env PGRST_JWT_SECRET=$JWT_SECRET
-  --env PGRST_APP_SETTINGS_JWT_SECRET=$JWT_SECRET
-  --detach
-  --restart=unless-stopped
-  --name myapp-postgrest
-  --network myapp
+docker run \
+  --env PGRST_DB_URI="postgres://authenticator:mysecretpassword@myapp-postgres:5432/app" \
+  --env PGRST_JWT_SECRET=$JWT_SECRET \
+  --env PGRST_APP_SETTINGS_JWT_SECRET=$JWT_SECRET \
+  --detach \
+  --restart=unless-stopped \
+  --name myapp-postgrest \
+  --network myapp \
   ghcr.io/myapp/postgrest
 ```
 
@@ -57,11 +57,11 @@ Start OpenResty:
 
 ```sh
 docker run
-  --detach
-  --restart=unless-stopped
-  --name myapp-openresty
-  --network myapp
-  --volume ${PWD}/conf.d-dev:/etc/nginx/conf.d
-  --publish 8000:80
+  --detach \
+  --restart=unless-stopped \
+  --name myapp-openresty \
+  --network myapp \
+  --volume ${PWD}/conf.d-dev:/etc/nginx/conf.d \
+  --publish 8000:80 \
   ghcr.io/myapp/myapp-openresty
 ```
