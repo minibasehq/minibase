@@ -12,7 +12,7 @@ Minibase is a lightweight backend infrastructure.
 
 Start Postgres:
 
-```console
+```sh
 docker run
   --env POSTGRES_PASSWORD="postgres"
   --env POSTGRES_DB="app"
@@ -28,7 +28,7 @@ docker run
 
 Start GoTrue:
 
-```console
+```sh
 TODO
 ```
 
@@ -36,7 +36,7 @@ TODO
 
 Start PostgREST:
 
-```console
+```sh
 docker run
   --env PGRST_DB_URI="postgres://authenticator:mysecretpassword@myapp-postgres:5432/app"
   --env PGRST_JWT_SECRET=$JWT_SECRET
@@ -55,7 +55,7 @@ are specific to this application. The ports should remain unchanged.
 
 Start OpenResty:
 
-```console
+```sh
 docker run
   --detach
   --restart=unless-stopped
