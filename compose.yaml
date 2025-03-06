@@ -1,0 +1,41 @@
+services:
+  postgres:
+    container_name: ${APPNAME:?error}-postgres
+    image: ghcr.io/explodinglabs/postgres
+    restart: unless-stopped
+    volumes:
+      - $HOME/data/${APPNAME:?error}:/var/lib/postgresql/data:Z
+      - ./postgres/init/jwt.sql:/docker-entrypoint-initdb.d/init-scripts/
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: app
+
+  postgrest:
+    container_name: ${APPNAME:?error}-postgrest
+    image: ghcr.io/explodinglabs/postgrest
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGRST_APP_SETTINGS_JWT_EXP: ${JWT_EXPIRY}
+      PGRST_APP_SETTINGS_JWT_SECRET: ${JWT_SECRET}
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_DB_SCHEMAS: ${PGRST_DB_SCHEMAS}
+      PGRST_DB_URI: postgres://authenticator:${POSTGRES_PASSWORD}@${APPNAME:?error}-postgres:5432/app
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+
+  openresty:
+    container_name: ${APPNAME:?error}-openresty
+    build:
+      dockerfile: openresty/Dockerfile
+    image: ghcr.io/explodinglabs.com/${APPNAME:?error}-openresty
+    restart: unless-stopped
+    ports:
+      - ${OPENRESTY_PORT:?error}:80

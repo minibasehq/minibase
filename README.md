@@ -2,11 +2,34 @@
 
 Minibase is a lightweight backend infrastructure.
 
-<img
-  alt="Minibase design"
-  style="margin: 0 auto;"
-  src="https://github.com/explodinglabs/minibase/blob/main/architecture.png?raw=true"
-/>
+<img alt="Architecture diagram" src="https://github.com/explodinglabs/minibase/blob/main/architecture.png?raw=true" />
+
+Install Minibase:
+
+```sh
+curl -sSL https://raw.githubusercontent.com/explodinglabs/minibase/main/scripts/install.sh | sh
+```
+
+```sh
+docker-service get explodinglabs/postgres explodinglabs/openresty
+```
+
+# docker compose up -d -f postgres.yml -f postgrest.yml -f gotrue.yml -f openresty.yml
+
+## OpenResty
+
+Start OpenResty:
+
+```sh
+docker run
+  --detach \
+  --restart=unless-stopped \
+  --name myapp-openresty \
+  --network myapp \
+  --volume ./openresty/conf.d:/etc/nginx/conf.d:Z \
+  --publish 80:80 \
+  ghcr.io/explodinglabs/openresty
+```
 
 ## Postgres
 
@@ -21,15 +44,7 @@ docker run \
   --name myapp-postgres \
   --network myapp \
   --volume ./data:/var/lib/postgresql/data:Z \
-  ghcr.io/myapp/postgres
-```
-
-## GoTrue
-
-Start GoTrue:
-
-```sh
-TODO
+  ghcr.io/explodinglabs/postgres
 ```
 
 ## PostgREST
@@ -45,23 +60,23 @@ docker run \
   --restart=unless-stopped \
   --name myapp-postgrest \
   --network myapp \
-  ghcr.io/myapp/postgrest
+  ghcr.io/explodinglabs/postgrest
 ```
 
-## OpenResty
-
-Edit the files in `openresty/conf.d` to set the correct container names, which
-are specific to this application. The ports should remain unchanged.
-
-Start OpenResty:
+Copy `postgrest.conf` into OpenResty's configuration:
 
 ```sh
-docker run
-  --detach \
-  --restart=unless-stopped \
-  --name myapp-openresty \
-  --network myapp \
-  --volume ${PWD}/conf.d-dev:/etc/nginx/conf.d \
-  --publish 8000:80 \
-  ghcr.io/myapp/myapp-openresty
+cp openresty/conf.d/postgrest.conf
+```
+
+```sh
+docker exec myapp-openresty /usr/bin/openresty -s reload
+```
+
+## GoTrue
+
+Start GoTrue:
+
+```sh
+TODO
 ```
