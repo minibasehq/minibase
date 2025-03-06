@@ -80,3 +80,15 @@ Start GoTrue:
 ```sh
 TODO
 ```
+
+# Production
+
+docker build -f openresty/Dockerfile .
+docker push ghcr.io/explodinglabs/myapp-openresty
+Add remote context:
+
+Switch to remote context:
+docker context add ssh://
+
+Bring up remote containers:
+docker compose up -d
